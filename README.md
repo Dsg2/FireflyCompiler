@@ -1,2 +1,2 @@
 # FireflyCompiler
-C transpiler+compiler from a custom language
+Highly moddable C transpiler+compiler from a minimalistic language
