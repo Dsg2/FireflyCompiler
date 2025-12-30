@@ -1,2 +1,2 @@
 # FireflyCompiler
-Highly moddable C transpiler+compiler from a minimalistic language
+Highly moddable C transpiler+compiler using a minimalistic language
