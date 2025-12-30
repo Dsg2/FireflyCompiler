@@ -1,0 +1,41 @@
+{
+    "base":{
+        "include":"include <name> (includes a header or library)",
+        "var":"var <name> <type> (initialises a variable of a type)",
+        "set":"set <name> <expr> (sets a variable to something)",
+        "func":"func <name> <type> <args> (initialises a function with arguments, needed for main())",
+        "return":"return <expr> (returns something)",
+        "call":"call <name> (calls a function)",
+        "if":"if <cond>",
+        "else":"else",
+        "while":"while <cond>",
+        "for":"for <cond> (for loop, SPACES MATTERS, example: for i = 0 i < 10 i++)",
+        "end":"end (pretty much end brackets)"
+        },
+    "markers":[
+        "include",
+        "var",
+        "set",
+        "func",
+        "return",
+        "call",
+        "if",
+        "else",
+        "while",
+        "for",
+        "end"
+        ],
+    "sequence":{
+        "include":"#include {name}",
+        "var":"{type} {name};",
+        "set":"{name} = {expr};",
+        "func":"{type} {name}({args}) {",
+        "return":"return {expr};",
+        "call":"{name}();",
+        "if":"if ({cond}) {",
+        "else":"} else {",
+        "while":"while ({cond}) {",
+        "for":"for ({cond}) {",
+        "end":"}"
+        }
+}

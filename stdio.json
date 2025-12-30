@@ -1,0 +1,19 @@
+{
+    "name":"<stdio.h>",
+    "description":"example stdio extension made by Dsg2 (github) for FireflyCompiler, not finished yet :/",
+    "base":{
+        "print":"print <expr>",
+        "input":"input <name>"
+        },
+    "markers":[
+        "print",
+        "input"
+        ],
+    "sequence":{
+        "print":"printf({expr});",
+        "input":"scanf({expr});"
+        },
+    "scripts":{
+        "print":"varlist = []\ndeflist = {'int':'%d', 'float':'%f', 'char':'%c', 'str':'%s'}\nmaincache=''\nt = 0\ncache= ''\nrest = line.split(maxsplit=1)[1]\nfor ind, char in enumerate(rest):\n    if t == 1:\n        if (char != ' ') or (ind == (len(rest) - 1)):\n            cache += char\n        else:\n            t = 0\n            varlist.append(cache)\n            maincache += deflist[temp['vars'][cache]]\n            cache = ''\n    else:\n        if char == '%':\n            t = 1\n        else:\n            maincache += char\nif t == 1:\n    varlist.append(cache)\n    maincache += deflist[temp['vars'][cache]]\nvarlist.insert(0, '\"' + maincache + '\"')\nout = ','.join(varlist)"
+        }
+}
