@@ -33,6 +33,7 @@ FireflyCompiler v0.2 by Dsg2 (github)
 
 commands:
     help / h - display help message again
+    exit
 
     r - read file
         it reads a file
@@ -102,6 +103,7 @@ task = None
 file = None
 cache = []
 env = None
+lsopt = []
 
 def spaceformat(inp, letter=",", spacing=1):
     cache = ""
@@ -117,6 +119,13 @@ def spaceformat(inp, letter=",", spacing=1):
                 num = 0
                 cache += f"{letter} "
     return cache
+
+def istype(string):
+    types = ["char", "float", "double", "int"]
+    if string in types:
+        return 1
+    else:
+        return 0
 
 def ext(line):
     global data, env
@@ -143,13 +152,27 @@ def enc(line):
         match marker:
             case "include":
                 name = line.split(maxsplit=1)[1]
+                if name in data["extensions"]:
+                    if "script" in data["extensions"][name]:
+                        env = {"temp":data["temp"], "line":line}
+                        exec(str(data["extensions"][name]["script"]), {}, env)
+                        if isinstance(out, str):
+                            return [data["sequence"][marker].replace("{name}", name), out]
+                        elif isinstance(out, list):
+                            return [data["sequence"][marker].replace("{name}", name)] + out
                 return data["sequence"][marker].replace("{name}", name)
             case "var":
                 parts = line.split()
                 name, typ = parts[1], parts[2]
+                if "[" in name:
+                    fname = name.split("[")[0]
+                else:
+                    fname = name
                 if "vars" not in data["temp"]:
                     data["temp"] = {"vars":{}}
-                data["temp"]["vars"][name] = typ
+                data["temp"]["vars"][fname] = typ
+                if not istype(typ):
+                    print(f"warning: {typ} is not a valid var type")
                 return data["sequence"][marker].replace("{name}", name).replace("{type}", typ)
             case "set":
                 parts = line.split(maxsplit=2)
@@ -158,6 +181,8 @@ def enc(line):
             case "func":
                 parts = line.split(maxsplit=3)
                 name, typ, args_str = parts[1], parts[2], spaceformat(parts[3])
+                if not istype(typ):
+                    print(f"warning: {typ} is not a valid func type")
                 return data["sequence"][marker].replace("{name}", name).replace("{type}", typ).replace("{args}", args_str)
             case "return":
                 expr = line.split(maxsplit=1)[1]
@@ -185,6 +210,7 @@ print()
 
 while True:
     task = input("> ")
+    print()
     match task:
         case "help":
             print(helptxt)
@@ -213,10 +239,20 @@ while True:
                             pass
                         
                         if marker in data["markers"]:
-                            cache.append(enc(line))
+                            ret = enc(line)
+                            if isinstance(ret, str):
+                                cache.append(enc(line))
+                            elif isinstance(ret, list):
+                                for l in ret:
+                                    cache.append(l)
                         else:
                             if marker in extmarkers:
-                                cache.append(ext(line))
+                                ret = ext(line)
+                                if isinstance(ret, str):
+                                    cache.append(ret)
+                                elif isinstance(ret, list):
+                                    for l in ret:
+                                        cache.append(l)
                             else:
                                 print(f"unknown marker '{marker}' on line {ind + 1}")
                 
@@ -244,6 +280,32 @@ while True:
                     print("compile succeeded")
             else:
                 pass
+        case "exit":
+            break
+        case "overload":
+            arr = []
+            string = ""
+            while True:
+                for i in range(26):
+                    string += "qwertyuiopasdfghjklzxcvbnm"[i]
+                arr.append(string)
+        case "flush":
+            with open(f"{str(time.time()).split('.')[1]}.flush", "w") as f:
+                json.dump(data, f)
+        case "ls":
+            print("folders:")
+            for path in os.listdir():
+                if os.path.isdir(path):
+                    print(path)
+            print("\nfiles:")
+            lsopt = []
+            t = 0
+            for path in os.listdir():
+                if "." in path:
+                    if path.split(".")[1] == "ff":
+                        print(f"{t} - {path}")
+                        lsopt.append(path)
+                        t = t + 1
         case _:
             print(f"command {task} not recognised")
     print()
