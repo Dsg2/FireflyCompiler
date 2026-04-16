@@ -23,3 +23,24 @@ Built in keywords:
 The language takes in .json files as extensions, like how libraries work. A watered down stdio.h library (printf + scanf) is included as an example, where it simplifies that language by automatically keeping track of variable types and removes the need for format specifiers.
 
 Overall, it acts like a line by line transpiler but with deeper functionality if extensions are used.
+
+Example fibonacci script:
+```
+include <stdio.h>
+func main int void
+var i int
+var var1 int
+var var2 int
+var cache int
+set var1 1
+set var2 1
+for i = 0 i < 10 i++
+set cache var1 + var2
+set var1 var2
+set var2 cache
+print %cache
+end
+return 0
+end
+```
+Transpile commands are within the project's console.
